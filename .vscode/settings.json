@@ -1,0 +1,7 @@
+{
+    "python.pythonPath": "/Users/xinkechen/.local/share/virtualenvs/backend-5PHcnuqX/bin/python",
+    "python.linting.pylintEnabled": false,
+    "python.linting.pep8Enabled": true,
+    "python.linting.enabled": true,
+    "python.pipenvPath": "/usr/local/bin/pipenv"
+}
