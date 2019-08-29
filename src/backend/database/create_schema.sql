@@ -1,7 +1,10 @@
-DROP IF EXISTS persons, roles, admins, events;
+DROP TABLE IF EXISTS persons;
+DROP TABLE IF EXISTS roles;
+DROP TABLE IF EXISTS admins;
+DROP TABLE IF EXISTS events;
 
 -- SET foreign keys to be enforced
-PRAGMA foreign_keys = ON;
+PRAGMA foreign_keys=ON;
 -- define tables with foreign and primary keys
 CREATE TABLE persons (
     person_id INTEGER NOT NULL PRIMARY KEY,
@@ -11,7 +14,7 @@ CREATE TABLE persons (
     created DATETIME,
     added_by INTEGER,
     role INTEGER,
-    FOREIGN KEY role REFERENCES roles(role_id)
+    FOREIGN KEY (role) REFERENCES roles(role_id)
 );
 
 CREATE TABLE roles (
@@ -25,7 +28,7 @@ CREATE TABLE roles (
 CREATE TABLE admins (
     admin_id INTEGER NOT NULL PRIMARY KEY,
     password VARCHAR,
-    FOREIGN KEY admin_id REFERENCES persons(person_id)
+    FOREIGN KEY (admin_id) REFERENCES persons(person_id)
 );
 
 CREATE TABLE events (
