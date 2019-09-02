@@ -1,0 +1,3 @@
+APP_NAME: door-unlock-api
+SQLITE_DB_NAME: door-db.sqlite
+FLASK_DEBUG : true
