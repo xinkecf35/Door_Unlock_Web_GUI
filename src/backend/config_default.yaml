@@ -1,3 +1,4 @@
 APP_NAME: door-unlock-api
+PYTHON_ENV: 'dev'
 SQLITE_DB_NAME: door-db.sqlite
 FLASK_DEBUG : true

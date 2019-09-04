@@ -4,5 +4,6 @@
     "python.linting.pep8Enabled": true,
     "python.linting.enabled": true,
     "python.pipenvPath": "/usr/local/bin/pipenv",
-    "python.terminal.activateEnvironment": false
+    "python.terminal.activateEnvironment": false,
+    "python.venvPath": "/Users/xinkechen/.local/share/virtualenvs/Door_Unlock_Web_GUI-FvVoM9zc/bin/python"
 }
