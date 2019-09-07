@@ -10,6 +10,9 @@ marshmallow = "*"
 flask-sqlalchemy = "*"
 flask-marshmallow = "*"
 marshmallow-sqlalchemy = "*"
+flask-restful = "*"
+flask = "*"
+pyyaml = "*"
 
 [requires]
 python_version = "3.7"
