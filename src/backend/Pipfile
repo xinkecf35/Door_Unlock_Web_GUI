@@ -7,7 +7,6 @@ verify_ssl = true
 
 [packages]
 marshmallow = "*"
-confuse = "*"
 flask-sqlalchemy = "*"
 flask-marshmallow = "*"
 marshmallow-sqlalchemy = "*"
