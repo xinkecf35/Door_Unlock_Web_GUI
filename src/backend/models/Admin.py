@@ -1,4 +1,3 @@
-from marshmallow import Schema, fields
 from flask_sqlalchemy import SQLAlchemy
 import config
 import sqlite3

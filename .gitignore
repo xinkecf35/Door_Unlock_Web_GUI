@@ -2,6 +2,9 @@
 # Created by https://www.gitignore.io/api/vue,node,flask,python,visualstudiocode
 # Edit at https://www.gitignore.io/?templates=vue,node,flask,python,visualstudiocode
 
+# Mac OS
+*.DS_Store
+
 ### Flask ###
 instance/*
 !instance/.gitignore

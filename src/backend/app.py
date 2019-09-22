@@ -12,12 +12,13 @@ with open('config.yaml', 'r') as configFile:
 # Global app variables setup
 app = Flask(__name__)
 api = Api(app)
-
+db = SQLAlchemy()
+ma = Marshmallow()
 
 # Database/SQLAlchemy Setup
 currentDir = os.getcwd()
 dbName = config['SQLITE_DB_NAME']
-dbURI = f'sqlite:////{currentDir}/database/{dbName}'
+dbURI = f'sqlite:////{currentDir}/database/data/{dbName}'
 app.config['SQLALCHEMY_DATABASE_URI'] = dbURI
 
 
@@ -25,4 +26,6 @@ def hello():
     return jsonify('Hello from Door Unlocker API')
 
 if __name__ == '__main__':
+    db.init_app(app)
+    ma.init_app(app)
     app.run()

@@ -17,6 +17,9 @@ Backend setup is straightforward, simply navigate to `src/backend` and run
 `pipenv install` and then `pipenv shell` to install the python dependencies
 and initialize the virtual environment
 
+Note that `data` folder in `src/backend` is purely for the storage of the SQLITE
+file and is also used as a mount point for the Docker Volume
+
 ## Frontend
 Frontend is a little more involved, as the Vue-CLI must be installed first. Run `npm install -g @vue/cli` to install the necessary tooling. From there, navigate to `src/frontend` and run `npm install` to install all related dependencies. For more info about working VueJS and the Vue-CLI, please consult
 the appropriate documentation.
