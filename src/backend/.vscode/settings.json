@@ -5,9 +5,9 @@
     "python.linting.enabled": true,
     "python.pipenvPath": "/usr/local/bin/pipenv",
     "python.terminal.activateEnvironment": false,
-    "python.venvPath": "/Users/xinkechen/.local/share/virtualenvs/Door_Unlock_Web_GUI-FvVoM9zc/bin/python",
+    "python.venvPath": "/Users/xinkechen/.local/share/virtualenvs/backend-5PHcnuqX/bin/python",
     "python.testing.pytestArgs": [
-        "tests"
+        "test"
     ],
     "python.testing.unittestEnabled": false,
     "python.testing.nosetestsEnabled": false,
