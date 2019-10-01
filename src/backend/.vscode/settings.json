@@ -1,13 +1,13 @@
 {
     "python.pythonPath": "/Users/xinkechen/.local/share/virtualenvs/backend-5PHcnuqX/bin/python",
-    "python.linting.pylintEnabled": false,
-    "python.linting.pep8Enabled": true,
+    "python.jediEnabled": false,
+    "python.linting.pycodestyleEnabled": true,
     "python.linting.enabled": true,
-    "python.pipenvPath": "/usr/local/bin/pipenv",
-    "python.terminal.activateEnvironment": false,
-    "python.venvPath": "/Users/xinkechen/.local/share/virtualenvs/backend-5PHcnuqX/bin/python",
+    "python.analysis.disabled": [
+        "inherit-non-class"
+    ],
     "python.testing.pytestArgs": [
-        "test"
+        "tests"
     ],
     "python.testing.unittestEnabled": false,
     "python.testing.nosetestsEnabled": false,
