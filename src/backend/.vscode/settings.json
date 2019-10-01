@@ -1,15 +1,17 @@
 {
     "python.pythonPath": "/Users/xinkechen/.local/share/virtualenvs/backend-5PHcnuqX/bin/python",
     "python.jediEnabled": false,
-    "python.linting.pycodestyleEnabled": true,
+    "python.linting.pycodestyleEnabled": false,
     "python.linting.enabled": true,
     "python.analysis.disabled": [
-        "inherit-non-class"
+        "inherit-non-class",
+        "no-self-argument"
     ],
     "python.testing.pytestArgs": [
         "tests"
     ],
     "python.testing.unittestEnabled": false,
     "python.testing.nosetestsEnabled": false,
-    "python.testing.pytestEnabled": true
+    "python.testing.pytestEnabled": true,
+    "python.linting.flake8Enabled": true
 }
