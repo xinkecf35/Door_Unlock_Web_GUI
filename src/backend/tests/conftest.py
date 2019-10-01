@@ -22,3 +22,8 @@ def app():
     with app.test_client() as client:
         db.init_app(app)
         yield client
+
+
+@pytest.fixture(scope='session')
+def session(app):
+    return db

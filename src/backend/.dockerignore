@@ -21,7 +21,6 @@
 **/obj
 **/__pycache__
 **/.pytest_cache
-**/config.yaml
 **/secrets.dev.yaml
 **/values.dev.yaml
 LICENSE
