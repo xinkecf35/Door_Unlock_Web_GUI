@@ -1,6 +1,5 @@
 from flask_sqlalchemy import SQLAlchemy
-
-db = SQLAlchemy()
+from src.extensions import db
 
 
 class Role(db.Model):
@@ -11,7 +10,7 @@ class Role(db.Model):
     canAccessHistory = db.Column('can_access_history', db.Integer)
 
     def __repr__(self):
-        return f'role: role_id:{id}, name: {name}'
+        return f'role: role_id:{id}, name: {self.name}'
 
     def __str__(self):
-        return f'role name: {name}'
+        return f'role name: {self.name}'

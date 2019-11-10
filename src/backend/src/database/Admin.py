@@ -1,6 +1,5 @@
-from flask_sqlalchemy import SQLAlchemy
+from src.extensions import db
 
-db = SQLAlchemy()
 
 class Admin(db.Model):
     id = db.Column(db.Integer, db.ForeignKey('person.id'), primary_key=True)
