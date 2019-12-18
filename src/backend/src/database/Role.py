@@ -1,4 +1,3 @@
-from flask_sqlalchemy import SQLAlchemy
 from src.extensions import db
 
 
@@ -8,6 +7,7 @@ class Role(db.Model):
     canUnlock = db.Column('can_unlock', db.Integer)
     canManage = db.Column('can_manage', db.Integer)
     canAccessHistory = db.Column('can_access_history', db.Integer)
+    persons = db.relationship('Person', lazy=True)
 
     def __repr__(self):
         return f'role: role_id:{id}, name: {self.name}'

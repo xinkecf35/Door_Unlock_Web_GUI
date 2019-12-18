@@ -18,19 +18,31 @@ class TestPerson:
                      canUnlock=1,
                      canManage=0,
                      canAccessHistory=0)
+        role2 = Role(name='admin',
+                     canUnlock=1,
+                     canManage=1,
+                     canAccessHistory=1)
         db.session.add(role1)
-
+        db.session.add(role2)
+        testAdmin = Person(firstName='John',
+                           lastName='Smith',
+                           username='admin',
+                           role=role2.id)
+        db.session.add(testAdmin)
         persons = []
         names = []
+        insertedAdmin = Person.query.filter_by(username='admin').first()
         for _ in range(10):
             data = self.generateName()
             names.append(data)
             persons.append(Person(firstName=data[0],
                                   lastName=data[1],
-                                  username=data[2]))
+                                  username=data[2],
+                                  addedBy=insertedAdmin.id))
         for person in persons:
             db.session.add(person)
         for name in names:
             testUsername = name[2]
             queryPerson = Person.query.filter_by(username=testUsername).first()
             assert queryPerson.username == testUsername
+            assert queryPerson.addedBy == testAdmin.id
