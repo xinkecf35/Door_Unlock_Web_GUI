@@ -3,6 +3,8 @@ import names
 from random import randint
 from src.database.Person import Person
 from src.database.Role import Role
+from src.database.Admin import Admin
+from sqlalchemy.exc import IntegrityError
 
 
 @pytest.mark.usefixtures('db')
@@ -14,20 +16,30 @@ class TestPerson:
         return (firstName, lastName, username)
 
     def testInsert(self, db):
-        role1 = Role(name='member',
-                     canUnlock=1,
-                     canManage=0,
-                     canAccessHistory=0)
-        role2 = Role(name='admin',
-                     canUnlock=1,
-                     canManage=1,
-                     canAccessHistory=1)
+        role1 = Role(
+            name='member',
+            canUnlock=1,
+            canManage=0,
+            canAccessHistory=0)
+        role2 = Role(
+            name='admin',
+            canUnlock=1,
+            canManage=1,
+            canAccessHistory=1)
         db.session.add(role1)
         db.session.add(role2)
-        testAdmin = Person(firstName='John',
-                           lastName='Smith',
-                           username='admin',
-                           role=role2.id)
+        db.session.commit()
+
+        testAdminPerson = Person(
+            firstName='John',
+            lastName='Smith',
+            username='admin',
+            role=role2.id)
+        db.session.add(testAdminPerson)
+        db.session.commit()
+        testAdmin = Admin(
+            id=testAdminPerson.id,
+            password='snakeoil')
         db.session.add(testAdmin)
         persons = []
         names = []
@@ -41,8 +53,20 @@ class TestPerson:
                                   addedBy=insertedAdmin.id))
         for person in persons:
             db.session.add(person)
+        db.session.commit()
         for name in names:
             testUsername = name[2]
             queryPerson = Person.query.filter_by(username=testUsername).first()
             assert queryPerson.username == testUsername
-            assert queryPerson.addedBy == testAdmin.id
+            assert queryPerson.addedBy == testAdminPerson.id
+
+        # Attempt to create user that does not have foreign key available
+        fkTestPerson = Person(
+            firstName='Alice',
+            lastName='Invalid',
+            username='invalidalice',
+            role=3
+        )
+        with pytest.raises(IntegrityError):
+            db.session.add(fkTestPerson)
+            db.session.commit()

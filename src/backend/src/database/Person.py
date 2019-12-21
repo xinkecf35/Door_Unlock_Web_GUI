@@ -1,5 +1,6 @@
 from datetime import datetime
 from src.extensions import db
+from sqlalchemy import DDL, event
 
 
 class Person(db.Model):

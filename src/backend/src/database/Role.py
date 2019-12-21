@@ -8,9 +8,3 @@ class Role(db.Model):
     canManage = db.Column('can_manage', db.Integer)
     canAccessHistory = db.Column('can_access_history', db.Integer)
     persons = db.relationship('Person', lazy=True)
-
-    def __repr__(self):
-        return f'role: role_id:{id}, name: {self.name}'
-
-    def __str__(self):
-        return f'role name: {self.name}'
