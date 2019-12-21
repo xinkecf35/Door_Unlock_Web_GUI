@@ -15,7 +15,7 @@ class TestPerson:
         username = ''.join([firstName, lastName, str(randint(1, 1000))])
         return (firstName, lastName, username)
 
-    def testInsert(self, db):
+    def insertRoles(self, db):
         role1 = Role(
             name='member',
             canUnlock=1,
@@ -29,7 +29,10 @@ class TestPerson:
         db.session.add(role1)
         db.session.add(role2)
         db.session.commit()
+        return role1, role2
 
+    def testInsert(self, db):
+        role1, role2 = self.insertRoles(db)
         testAdminPerson = Person(
             firstName='John',
             lastName='Smith',
@@ -60,7 +63,8 @@ class TestPerson:
             assert queryPerson.username == testUsername
             assert queryPerson.addedBy == testAdminPerson.id
 
-        # Attempt to create user that does not have foreign key available
+        # Attempt to create user that does not have foreign key available,
+        # should fail to do so.
         fkTestPerson = Person(
             firstName='Alice',
             lastName='Invalid',
