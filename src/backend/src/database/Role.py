@@ -8,4 +8,4 @@ class Role(db.Model):
     canUnlock = db.Column('can_unlock', db.Integer)
     canManage = db.Column('can_manage', db.Integer)
     canAccessHistory = db.Column('can_access_history', db.Integer)
-    persons = db.relationship('Person', lazy=True)
+    persons = db.relationship('Person', lazy='joined')

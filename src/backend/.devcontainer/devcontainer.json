@@ -16,7 +16,7 @@
 	// "appPort": [],
 
 	// Uncomment the next line to run commands after the container is created.
-	// "postCreateCommand": "docker --version",
+	"postCreateCommand": "sudo pip install -r requirements-dev.txt",
 
 	// Uncomment the next line if you will use a ptrace-based debugger like C++, Go, and Rust
 	// "runArgs": [ "--cap-add=SYS_PTRACE", "--security-opt", "seccomp=unconfined" ],

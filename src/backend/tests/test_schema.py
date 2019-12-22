@@ -33,5 +33,5 @@ class TestUserSchema:
         db.session.add(testAdminPerson)
         db.session.commit()
         userSchema = UserSchema()
-        dumpInfo = userSchema.dump(testAdminPerson)
+        dumpInfo = userSchema.dumps(testAdminPerson)
         print(dumpInfo)

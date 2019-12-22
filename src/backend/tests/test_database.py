@@ -4,6 +4,7 @@ from random import randint
 from src.database.Person import Person
 from src.database.Role import Role
 from src.database.Admin import Admin
+from sqlalchemy import func
 from sqlalchemy.exc import IntegrityError
 
 
@@ -31,7 +32,7 @@ class TestPerson:
         db.session.commit()
         return role1, role2
 
-    def testInsert(self, db):
+    def testInsertPersonAdmin(self, db):
         role1, role2 = self.insertRoles(db)
         testAdminPerson = Person(
             firstName='John',
@@ -74,3 +75,14 @@ class TestPerson:
         with pytest.raises(IntegrityError):
             db.session.add(fkTestPerson)
             db.session.commit()
+        db.session.rollback()
+
+    def testRolesFetch(self, db):
+        personsCount = db.session.query(
+            func.count(Person.id)).\
+            join(Role).filter(Role.name == 'member').all()
+        assert personsCount[0][0] == 10
+        adminCount = db.session.query(
+            func.count(Person.id)).\
+            join(Role).filter(Role.name == 'admin').all()
+        assert adminCount[0][0] == 1
