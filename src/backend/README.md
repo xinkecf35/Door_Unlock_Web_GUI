@@ -54,12 +54,10 @@ the guy who did this is a Web guy?)
 
 ### Testing
 
-This is still largely in progress. REST resources are being determined and 
-tests are being created gradually. The test suite is not meant to be
-comprehensive, just enough to verify very basic operations. Additionally,
-if one is using Docker. one can use use ```(sudo) docker build --tag=
-door-unlock-api:latest --target=test .```and then ```docker 
-run door-unlock-api:latest``` to  run the test suite instead.
+To run the test suite, one can consult the documentation on pytest to
+launch the test quite. Alternatively, one can also do ```(sudo) docker build --tag=
+door-unlock-api:latest --target=test .```and then ```docker run door-unlock-api:latest```
+Visual Studio Code with the Python extension also helpfully lets you run the test suite.
 
 ### Deployment
 
@@ -68,3 +66,57 @@ This hopefully will simplify deployment and integration with CI (this is the
 primary reason that the application communicates over IP sockets. Sharing a SQLite
 database between containers was uncertain, especially given that concurrent database
 access for SQLite is dependent on file locks/synchronization primitives).
+
+### Endpoints
+
+This is still largely in progress. REST resources are being determined and 
+tests are being created gradually. The test suite is not meant to be
+comprehensive, just enough to verify very basic operations. The following is a
+outline of the endpoints and methods available:
+
+#### /users ####
+
+* POST
+    - Creates user
+    - Note that certain fields need to match things in Slack workspace for interop.
+    - Returns a 201 upon success
+* PUT
+    - same as POST, used as bulk udpate
+    - Should expect idempotent operations
+
+* DELETE
+    - Removes users
+    - Note this is protected route, user must be authenticate and contain the correct
+    role and permissions to do so.
+
+#### /users/sso ###
+ 
+* Not implemented yet, will be used to support single sign on when web application
+  gets going
+* This is largely out of scope for this document but hypothetically speaking, this
+  base endpoint would be used to forward authorization tokens and verified
+  (if supported)
+
+#### /user ####
+
+* POST
+    - logs/authenticates the user for web portal
+    - returns a cookie with a JWT to act as authentication credentials
+
+#### /users/{username}/profile ####
+*Note this is a protected route, JWT subject and username must match*
+
+* POST
+    - Updates profiles
+
+* GET
+    - retrieves profile information for a given ```username```
+
+#### /slackbot ####
+
+* TBD, will be the base path for all Slack bot interactions (need to work
+  out authentication and hand off)
+* Restricted interactions here may leverage channel membership as authentication
+  mechanism.
+
+
