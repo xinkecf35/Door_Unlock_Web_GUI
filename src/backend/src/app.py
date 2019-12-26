@@ -1,5 +1,5 @@
-from flask import Flask, Response, jsonify, url_for
-from src.extensions import db, ma, api
+from flask import Flask, Response, jsonify
+from src.extensions import db, ma
 import os
 import yaml
 
@@ -17,7 +17,6 @@ def create_app(config):
     app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
     db.init_app(app)
     ma.init_app(app)
-    api.init_app(app)
     return app
 
 
