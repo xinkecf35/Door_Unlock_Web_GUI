@@ -13,9 +13,9 @@ rope = "*"
 flask-sqlalchemy = "*"
 flask-marshmallow = "*"
 marshmallow-sqlalchemy = "*"
-flask-restful = "*"
 flask = "*"
 pyyaml = "*"
+webargs = "*"
 
 [requires]
 python_version = "3.7"
