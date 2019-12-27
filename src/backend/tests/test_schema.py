@@ -23,7 +23,7 @@ class TestUserSchema:
         db.session.commit()
         return role1, role2
 
-    def testUserSchema(self, ma, db):
+    def testUserSchemaDump(self, db, ma):
         memberRole, adminRole = self.insertRoles(db)
         referenceData = {
             'username': 'johnadmin',
@@ -38,10 +38,26 @@ class TestUserSchema:
             password='password',
             role=adminRole.id
         )
+        userSchema = UserSchema(exclude=['password'])
         db.session.add(testAdminPerson)
         db.session.commit()
-        userSchema = UserSchema()
         dumpInfo = userSchema.dumps(testAdminPerson)
         loadedDump = json.loads(dumpInfo)
         for key in loadedDump.keys():
             assert loadedDump[key] == referenceData[key]
+        assert 'id' not in loadedDump.keys()
+        assert 'password' not in loadedDump.keys()
+
+    def testUserInsertFromData(self, db, ma):
+        insertFromData = {
+            'username': 'test',
+            'firstName': 'Johnny',
+            'lastName': 'Test',
+            'password': 'password',
+            'addedBy': None,
+        }
+        userSchema = UserSchema()
+        userModelFromData = userSchema.load(insertFromData)
+        db.session.add(userModelFromData)
+        db.session.commit()
+        assert userModelFromData.id is not None

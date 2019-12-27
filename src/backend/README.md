@@ -59,6 +59,12 @@ launch the test quite. Alternatively, one can also do ```(sudo) docker build --t
 door-unlock-api:latest --target=test .```and then ```docker run door-unlock-api:latest```
 Visual Studio Code with the Python extension also helpfully lets you run the test suite.
 
+If one is using a debugger, please note for each test module is intended to run at once. As of this
+time, each test case is interdependent of each other and relies on the successful execution
+of the previous test to work correctly. Specifically, this is due to use of module scoping for
+the test fixtures. For more information, please refer to the pytest documentation on fixtures 
+and fixture scoping.
+
 ### Deployment
 
 For deployment in production, the intention is to use Docker and Docker Compose.
