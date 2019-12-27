@@ -2,6 +2,7 @@ import json
 import pytest
 from src.database.Person import Person
 from src.database.Role import Role
+from marshmallow import ValidationError
 from src.models.UserSchema import UserSchema
 
 
@@ -28,8 +29,7 @@ class TestUserSchema:
         referenceData = {
             'username': 'johnadmin',
             'firstName': 'John',
-            'lastName': 'Smity',
-            'addedBy': None
+            'lastName': 'Smity'
         }
         testAdminPerson = Person(
             firstName='John',
@@ -38,7 +38,8 @@ class TestUserSchema:
             password='password',
             roleId=adminRole.id
         )
-        userSchema = UserSchema(exclude=['password', 'id'])
+        excludedFields = ['password', 'id', 'admin', 'created']
+        userSchema = UserSchema(exclude=excludedFields)
         db.session.add(testAdminPerson)
         db.session.commit()
         dumpInfo = userSchema.dumps(testAdminPerson)
@@ -54,11 +55,52 @@ class TestUserSchema:
             'firstName': 'Johnny',
             'lastName': 'Test',
             'password': 'password',
-            'addedBy': None,
+            'addedBy': 'johnadmin'
         }
         userSchema = UserSchema()
         userModelFromData = userSchema.load(insertFromData)
         db.session.add(userModelFromData)
         db.session.commit()
+        dumpedUser = userSchema.dump(userModelFromData)
         assert userModelFromData.id is not None
         assert userModelFromData.validatePassword('password')
+        assert type(dumpedUser['addedBy']) is str
+        adminInsertFromData = {
+            'username': 'admininsert',
+            'firstName': 'Admin',
+            'lastName': 'Smith',
+            'password': 'password',
+            'role': {
+                'id': 2,
+                'name': 'admin'
+            }
+        }
+        testAdminInsert = userSchema.load(adminInsertFromData)
+        db.session.add(testAdminInsert)
+        db.session.commit()
+        assert testAdminInsert.id is not None
+        assert testAdminInsert.validatePassword('password')
+        nonExistentUserData = {
+            'username': 'invalidAdded',
+            'firstName': 'Bob',
+            'lastName': 'Invalid',
+            'password': 'password',
+            'addedBy': '404'
+        }
+        with pytest.raises(ValidationError):
+            userSchema.load(nonExistentUserData)
+
+    def testNestedAddedBy(self, db, ma):
+        nestedUserData = {
+            'username': 'nestedAdd',
+            'firstName': 'Zach',
+            'lastName': 'Nested',
+            'password': 'password',
+            'addedBy': 'test'
+        }
+        userSchema = UserSchema()
+        nestedUser = userSchema.load(nestedUserData)
+        db.session.add(nestedUser)
+        db.session.commit()
+        nestedDump = userSchema.dump(nestedUser)
+        assert nestedDump['addedBy'] == 'test'
