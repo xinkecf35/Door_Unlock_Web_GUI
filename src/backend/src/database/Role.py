@@ -1,5 +1,4 @@
 from src.extensions import db
-from sqlalchemy import event
 
 
 class Role(db.Model):

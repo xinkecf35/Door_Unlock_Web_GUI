@@ -3,7 +3,6 @@ import names
 from random import randint
 from src.database.Person import Person
 from src.database.Role import Role
-from src.database.Admin import Admin
 from sqlalchemy import func
 from sqlalchemy.exc import IntegrityError
 
@@ -38,31 +37,40 @@ class TestPerson:
             firstName='John',
             lastName='Smith',
             username='admin',
+            password='snakeoil',
             role=role2.id)
         db.session.add(testAdminPerson)
         db.session.commit()
-        testAdmin = Admin(
-            id=testAdminPerson.id,
-            password='snakeoil')
-        db.session.add(testAdmin)
+        assert testAdminPerson.password != 'snakeoil'
+        assert testAdminPerson.validatePassword('snakeoil')
+        assert testAdminPerson.validatePassword('password') is False
+
+    def testPersonInsertWithAdmin(self, db):
         persons = []
         names = []
-        insertedAdmin = Person.query.filter_by(username='admin').first()
+        testAdminPerson = Person.query.filter_by(username='admin').first()
         for _ in range(10):
             data = self.generateName()
             names.append(data)
-            persons.append(Person(firstName=data[0],
-                                  lastName=data[1],
-                                  username=data[2],
-                                  addedBy=insertedAdmin.id))
+            person = Person(
+                firstName=data[0],
+                lastName=data[1],
+                username=data[2],
+                password='password',
+                addedBy=testAdminPerson.id)
+            persons.append(person)
         for person in persons:
             db.session.add(person)
         db.session.commit()
+        lastHash = b'0'
         for name in names:
             testUsername = name[2]
             queryPerson = Person.query.filter_by(username=testUsername).first()
             assert queryPerson.username == testUsername
             assert queryPerson.addedBy == testAdminPerson.id
+            assert queryPerson.validatePassword('password')
+            assert queryPerson.password != lastHash
+            lastHash = queryPerson.password
 
         # Attempt to create user that does not have foreign key available,
         # should fail to do so.
@@ -70,6 +78,7 @@ class TestPerson:
             firstName='Alice',
             lastName='Invalid',
             username='invalidalice',
+            password='password',
             role=3
         )
         with pytest.raises(IntegrityError):

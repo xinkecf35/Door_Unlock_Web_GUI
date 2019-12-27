@@ -1,3 +1,4 @@
+import json
 import pytest
 from src.database.Person import Person
 from src.database.Role import Role
@@ -24,14 +25,23 @@ class TestUserSchema:
 
     def testUserSchema(self, ma, db):
         memberRole, adminRole = self.insertRoles(db)
+        referenceData = {
+            'username': 'johnadmin',
+            'firstName': 'John',
+            'lastName': 'Smity',
+            'addedBy': None
+        }
         testAdminPerson = Person(
             firstName='John',
             lastName='Smity',
             username='johnadmin',
+            password='password',
             role=adminRole.id
         )
         db.session.add(testAdminPerson)
         db.session.commit()
         userSchema = UserSchema()
         dumpInfo = userSchema.dumps(testAdminPerson)
-        print(dumpInfo)
+        loadedDump = json.loads(dumpInfo)
+        for key in loadedDump.keys():
+            assert loadedDump[key] == referenceData[key]

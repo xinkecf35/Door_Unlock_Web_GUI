@@ -16,6 +16,7 @@ marshmallow-sqlalchemy = "*"
 flask = "*"
 pyyaml = "*"
 webargs = "*"
+bcrypt = "*"
 
 [requires]
 python_version = "3.7"
