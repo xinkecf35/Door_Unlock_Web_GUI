@@ -42,6 +42,7 @@ class Person(db.Model):
 
 
 @event.listens_for(Person, 'before_insert')
+@event.listens_for(Person, 'before_update')
 def hashPassword(mapper, connect, person):
     encodedPassword = encodePassword(person.password)
     person.password = bcrypt.hashpw(encodedPassword, bcrypt.gensalt())

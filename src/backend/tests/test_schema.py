@@ -38,7 +38,7 @@ class TestUserSchema:
             password='password',
             roleId=adminRole.id
         )
-        excludedFields = ['password', 'id', 'admin', 'created']
+        excludedFields = ['password', 'admin', 'created']
         userSchema = UserSchema(exclude=excludedFields)
         db.session.add(testAdminPerson)
         db.session.commit()
@@ -46,7 +46,6 @@ class TestUserSchema:
         loadedDump = json.loads(dumpInfo)
         for key in referenceData.keys():
             assert loadedDump[key] == referenceData[key]
-        assert 'id' not in loadedDump.keys()
         assert 'password' not in loadedDump.keys()
 
     def testUserInsertFromData(self, db, ma):
@@ -104,3 +103,21 @@ class TestUserSchema:
         db.session.commit()
         nestedDump = userSchema.dump(nestedUser)
         assert nestedDump['addedBy'] == 'test'
+
+    def testUpdateFromLoad(self, db, ma):
+        testUsername = 'test'
+        testId = Person.query.filter_by(username=testUsername).first().id
+        updatedPassword = 'snakeoil'
+        updateWithData = {
+            'id': testId,
+            'username': testUsername,
+            'firstName': 'Johnny',
+            'lastName': 'Test',
+            'password': updatedPassword,
+            'addedBy': 'johnadmin'
+        }
+        userSchema = UserSchema()
+        updatedUser = userSchema.load(updateWithData)
+        db.session.commit()
+        assert updatedUser.id == testId
+        assert updatedUser.validatePassword(updatedPassword)
