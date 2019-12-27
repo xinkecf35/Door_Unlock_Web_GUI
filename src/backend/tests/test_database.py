@@ -38,7 +38,7 @@ class TestPerson:
             lastName='Smith',
             username='admin',
             password='snakeoil',
-            role=role2.id)
+            roleId=role2.id)
         db.session.add(testAdminPerson)
         db.session.commit()
         assert testAdminPerson.password != 'snakeoil'
@@ -79,7 +79,7 @@ class TestPerson:
             lastName='Invalid',
             username='invalidalice',
             password='password',
-            role=3
+            roleId=3
         )
         with pytest.raises(IntegrityError):
             db.session.add(fkTestPerson)

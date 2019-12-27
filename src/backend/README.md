@@ -17,15 +17,13 @@ verifying and authentication credentials for users to unlock the physical door.
 
 This application is largely a Python app powered by the following:
 * Flask
-    - Flask-Restful
-        * Makes making REST API with Flask easier
     - Flask-SQLAlchemy
         * Object Relational Mapper and Database access
         * Meant to be DB agnostic
     - Flask-Marshmallow
         * For object serialization/deserialization and validation
 * SQLite (Used by SQLAlchemy)
-    - Lightweight RBDMS (because I don't have a 512 MB to give to a database)
+    - Lightweight RBDMS (because I don't have 512 MB to give to a database)
 * Docker
     - Containerization and Orchestration tool 
 
@@ -37,9 +35,9 @@ the Remote (Container) extensions and Docker to setup an isolated dev environmen
 (Note that this is largely still experimental). It is *strongly* discouraged to
 use the requirements.txt and requirements-dev.txt files as they are there for
 the Docker images and are not guaranteed to be updated. Said files are generated
-using ```pipenv lock -r > requirements.txt``` and ```pipenv lock -d -r >
-requirements.txt``` respectively. If you wish to add packages, you *should* use
-```pipenv```.
+using ```pipenv lock -r > requirements.txt``` and
+```pipenv lock -d -r >requirements.txt``` respectively. If you wish to add packages,
+ you *should* use ```pipenv```.
 
 ## Architecture and Deployment
 
@@ -55,9 +53,10 @@ the guy who did this is a Web guy?)
 ### Testing
 
 To run the test suite, one can consult the documentation on pytest to
-launch the test quite. Alternatively, one can also do ```(sudo) docker build --tag=
-door-unlock-api:latest --target=test .```and then ```docker run door-unlock-api:latest```
-Visual Studio Code with the Python extension also helpfully lets you run the test suite.
+launch the test quite. Alternatively, one can also do 
+```(sudo) docker build --tag=door-unlock-api:latest --target=test .``` and then
+```docker run door-unlock-api:latest```Visual Studio Code with the Python extension
+ also helpfully lets you run the test suite.
 
 If one is using a debugger, please note for each test module is intended to run at once. As of this
 time, each test case is interdependent of each other and relies on the successful execution

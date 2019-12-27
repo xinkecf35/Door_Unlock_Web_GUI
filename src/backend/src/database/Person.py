@@ -19,10 +19,12 @@ class Person(db.Model):
     created = db.Column(db.DateTime(), default=datetime.utcnow())
     addedBy = db.Column('added_by', db.Integer)
     password = db.Column(db.LargeBinary(60), nullable=False)
-    role = db.Column('role',
-                     db.Integer,
-                     db.ForeignKey("role.role_id"),
-                     default='1')
+    roleId = db.Column(
+        'role',
+        db.Integer,
+        db.ForeignKey("role.role_id"),
+        default='1')
+    role = db.relationship('Role')
 
     def validatePassword(self, password):
         encodedPassword = encodePassword(password)

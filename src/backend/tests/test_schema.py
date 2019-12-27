@@ -36,14 +36,14 @@ class TestUserSchema:
             lastName='Smity',
             username='johnadmin',
             password='password',
-            role=adminRole.id
+            roleId=adminRole.id
         )
-        userSchema = UserSchema(exclude=['password'])
+        userSchema = UserSchema(exclude=['password', 'id'])
         db.session.add(testAdminPerson)
         db.session.commit()
         dumpInfo = userSchema.dumps(testAdminPerson)
         loadedDump = json.loads(dumpInfo)
-        for key in loadedDump.keys():
+        for key in referenceData.keys():
             assert loadedDump[key] == referenceData[key]
         assert 'id' not in loadedDump.keys()
         assert 'password' not in loadedDump.keys()
@@ -61,3 +61,4 @@ class TestUserSchema:
         db.session.add(userModelFromData)
         db.session.commit()
         assert userModelFromData.id is not None
+        assert userModelFromData.validatePassword('password')
