@@ -121,3 +121,19 @@ class TestUserSchema:
         db.session.commit()
         assert updatedUser.id == testId
         assert updatedUser.validatePassword(updatedPassword)
+
+    def testWithInvalidRole(self, db, ma):
+        badActorData = {
+            'username': 'hacker',
+            'firstName': 'Johnny',
+            'lastName': 'Test',
+            'password': 'updatedPassword',
+            'addedBy': 'johnadmin',
+            'role': {
+                'id': 3,
+                'name': 'SuperAdmin'
+            }
+        }
+        userSchema = UserSchema()
+        with pytest.raises(ValidationError):
+            userSchema.load(badActorData)

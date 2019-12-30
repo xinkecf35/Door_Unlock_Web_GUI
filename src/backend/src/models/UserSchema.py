@@ -1,7 +1,15 @@
 from src.extensions import db, ma
 from src.database.Person import Person
+from src.database.Role import Role
 from marshmallow import fields, ValidationError
 from src.models.RoleSchema import RoleSchema
+
+
+def _checkRoleExistence(role):
+    if role is not None:
+        roleId = role.id
+        if Role.query.filter_by(id=roleId).first() is None:
+            raise ValidationError(f'role does not exists')
 
 
 class AddedByField(fields.Field):
@@ -21,14 +29,13 @@ class AddedByField(fields.Field):
 
 
 class UserSchema(ma.ModelSchema):
-
     class Meta:
         model = Person
         sqla_session = db.session
 
     addedBy = AddedByField()
-
     role = ma.Nested(
         RoleSchema,
         only=['id', 'name'],
-        partial=True)
+        partial=True,
+        validate=_checkRoleExistence)
