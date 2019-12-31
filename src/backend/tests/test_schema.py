@@ -8,24 +8,12 @@ from src.models.UserSchema import UserSchema
 
 @pytest.mark.usefixtures('db', 'ma')
 class TestUserSchema:
-    def insertRoles(self, db):
-        role1 = Role(
-            name='member',
-            canUnlock=1,
-            canManage=0,
-            canAccessHistory=0)
-        role2 = Role(
-            name='admin',
-            canUnlock=1,
-            canManage=1,
-            canAccessHistory=1)
-        db.session.add(role1)
-        db.session.add(role2)
-        db.session.commit()
-        return role1, role2
+    def fetchRoles(self, db):
+        roles = Role.query.all()
+        return roles[0], roles[1]
 
     def testUserSchemaDump(self, db, ma):
-        memberRole, adminRole = self.insertRoles(db)
+        memberRole, adminRole = self.fetchRoles(db)
         referenceData = {
             'username': 'johnadmin',
             'firstName': 'John',

@@ -28,3 +28,13 @@ def ma(app, db):
     ma.app = app
     with app.app_context():
         yield ma
+
+
+@pytest.fixture()
+def client(app):
+    from src.extensions import db
+    with app.test_client() as client:
+        db.app = app
+        db.create_all()
+        with app.app_context():
+            yield client

@@ -2,7 +2,7 @@ from src.extensions import db, ma
 from src.database.Person import Person
 from src.database.Role import Role
 from marshmallow import fields, ValidationError
-from src.models.RoleSchema import RoleSchema
+from .RoleSchema import RoleSchema
 
 
 def _checkRoleExistence(role):

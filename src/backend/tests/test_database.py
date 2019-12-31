@@ -15,24 +15,12 @@ class TestPerson:
         username = ''.join([firstName, lastName, str(randint(1, 1000))])
         return (firstName, lastName, username)
 
-    def insertRoles(self, db):
-        role1 = Role(
-            name='member',
-            canUnlock=1,
-            canManage=0,
-            canAccessHistory=0)
-        role2 = Role(
-            name='admin',
-            canUnlock=1,
-            canManage=1,
-            canAccessHistory=1)
-        db.session.add(role1)
-        db.session.add(role2)
-        db.session.commit()
-        return role1, role2
+    def fetchRoles(self, db):
+        roles = Role.query.all()
+        return roles[0], roles[1]
 
     def testInsertPersonAdmin(self, db):
-        role1, role2 = self.insertRoles(db)
+        role1, role2 = self.fetchRoles(db)
         testAdminPerson = Person(
             firstName='John',
             lastName='Smith',
