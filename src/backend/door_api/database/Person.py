@@ -2,7 +2,7 @@ from base64 import b64encode
 import bcrypt
 from datetime import datetime
 from hashlib import sha256
-from src.extensions import db
+from door_api.extensions import db
 from sqlalchemy import event
 
 

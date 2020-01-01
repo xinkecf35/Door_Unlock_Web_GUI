@@ -16,4 +16,4 @@ CMD pytest
 FROM builder AS production
 RUN rm -rf Pipfile* requirements*.txt tests
 VOLUME [ "/app/data" ]
-CMD python3 src/app.py
+CMD python3 door_api/app.py

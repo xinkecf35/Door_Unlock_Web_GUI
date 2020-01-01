@@ -1,9 +1,11 @@
-from flask import Flask, jsonify
-from src.database.Role import Role
-from src.extensions import db, ma
-from sqlalchemy import inspect
 import os
 import yaml
+
+from flask import Flask
+from sqlalchemy import inspect
+
+from .database import Role
+from .extensions import db, ma
 
 
 def _initializeDatabase(db):
@@ -27,23 +29,23 @@ def _initializeDatabase(db):
 
 
 def _registerBlueprints(app):
-    from src.routes import UsersResource
-
-    app.register_blueprint(UsersResource.bp)
+    from .routes import usersBP
+    app.register_blueprint(usersBP)
 
 
 def create_app(config):
     app = Flask(__name__)
-    # Database/SQLAlchemy Setup
-    currentDir = os.getcwd()
-    dbName = config['SQLITE_DB_NAME']
-    dbURI = f'sqlite:////{currentDir}/database/data/{dbName}'
-    if config['PYTHON_ENV'] == 'testing':
-        dbURI = 'sqlite://'
-        app.config['TESTING'] = True
-    app.config['ENV'] = config['PYTHON_ENV']
-    app.config['SQLALCHEMY_DATABASE_URI'] = dbURI
-    app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
+    if type(config) is dict:
+        # Database/SQLAlchemy Setup
+        currentDir = os.getcwd()
+        dbName = config['SQLITE_DB_NAME']
+        dbURI = f'sqlite:////{currentDir}/data/{dbName}'
+        if config['PYTHON_ENV'] == 'testing':
+            dbURI = 'sqlite://'
+            app.config['TESTING'] = True
+        app.config['ENV'] = config['PYTHON_ENV']
+        app.config['SQLALCHEMY_DATABASE_URI'] = dbURI
+        app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
     db.init_app(app)
     ma.init_app(app)
     db.app = app
@@ -53,14 +55,10 @@ def create_app(config):
     return app
 
 
-def hello():
-    return jsonify('Hello from Door Unlocker API')
-
-
 if __name__ == '__main__':
     # load config from yaml file
     with open('config.yaml', 'r') as configFile:
         config = yaml.safe_load(configFile)
-
+    print(type(config))
     app = create_app(config)
     app.run()

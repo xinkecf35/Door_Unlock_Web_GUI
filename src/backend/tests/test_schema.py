@@ -1,9 +1,9 @@
 import json
 import pytest
-from src.database.Person import Person
-from src.database.Role import Role
+from door_api.database.Person import Person
+from door_api.database.Role import Role
 from marshmallow import ValidationError
-from src.models.UserSchema import UserSchema
+from door_api.models.UserSchema import UserSchema
 
 
 @pytest.mark.usefixtures('db', 'ma')

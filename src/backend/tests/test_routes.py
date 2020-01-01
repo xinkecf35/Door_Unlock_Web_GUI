@@ -11,5 +11,5 @@ class TestUsersResource:
             'lastName': 'Test',
             'password': 'password',
         })
-        print(data.get_json())
         assert data.status_code == 200
+        assert data.is_json is True

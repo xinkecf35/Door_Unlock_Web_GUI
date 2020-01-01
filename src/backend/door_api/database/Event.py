@@ -1,4 +1,4 @@
-from src.extensions import db
+from door_api.extensions import db
 from datetime import datetime
 
 

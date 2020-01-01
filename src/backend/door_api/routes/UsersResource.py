@@ -1,12 +1,14 @@
-from flask import abort, Blueprint, request
-from .JSONResponse import JSONResponse
+from flask import Blueprint, abort, request
 from flask.views import MethodView
 from marshmallow import ValidationError
-from src.extensions import db
-from src.models.UserSchema import UserSchema
-from webargs.flaskparser import parser, use_args
+from webargs.flaskparser import use_args
 
-bp = Blueprint('users', __name__, url_prefix='/users')
+from door_api.extensions import db
+from door_api.models.UserSchema import UserSchema
+
+from .JSONResponse import JSONResponse
+
+usersBP = Blueprint('users', __name__, url_prefix='/users')
 excludeFields = ['password', 'admin']
 schema = UserSchema()
 dumpSchema = UserSchema(exclude=excludeFields)
@@ -24,7 +26,11 @@ class UsersResource(MethodView):
             db.session.rollback()
             abort(500)
         user = dumpSchema.dump(newUser)
-        return {'user': user}
+        return {'meta': {'success': True}, 'user': user}
 
 
-bp.add_url_rule('', 'UsersResource', view_func=UsersResource.as_view('users'))
+usersBP.add_url_rule(
+    '',
+    'UsersResource',
+    view_func=UsersResource.as_view('users')
+)
