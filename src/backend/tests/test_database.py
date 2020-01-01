@@ -1,8 +1,7 @@
 import pytest
 import names
 from random import randint
-from door_api.database import Person
-from door_api.database import Role
+from door_api.database import Person, Role
 from sqlalchemy import func
 from sqlalchemy.exc import IntegrityError
 

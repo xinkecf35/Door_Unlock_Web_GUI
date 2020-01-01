@@ -1,5 +1,5 @@
 import pytest
-
+import json
 
 @pytest.mark.usefixtures('app', 'client')
 class TestUsersResource:
@@ -13,3 +13,12 @@ class TestUsersResource:
         })
         assert data.status_code == 200
         assert data.is_json is True
+        loadedData = json.loads(data.data)
+        assert 'meta' in loadedData.keys()
+        data = client.post('/users', json={
+            'username': 'badActor'
+        })
+        assert data.status_code == 400
+        assert data.is_json is True
+        loadedData = json.loads(data.data)
+        assert 'meta' in loadedData.keys()

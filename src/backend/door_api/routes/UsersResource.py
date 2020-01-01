@@ -1,21 +1,16 @@
-from flask import Blueprint, abort, request
+from flask import Blueprint, abort
 from flask.views import MethodView
-from marshmallow import ValidationError
 from webargs.flaskparser import use_args
 
 from door_api.extensions import db
 from door_api.models.UserSchema import UserSchema
 
-from .JSONResponse import JSONResponse
-
 usersBP = Blueprint('users', __name__, url_prefix='/users')
 excludeFields = ['password', 'admin']
-schema = UserSchema()
 dumpSchema = UserSchema(exclude=excludeFields)
 
 
 class UsersResource(MethodView):
-    response_class = JSONResponse
 
     @use_args(UserSchema(), locations=['json'])
     def post(self, newUser):

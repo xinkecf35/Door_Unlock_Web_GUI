@@ -15,12 +15,17 @@ class JSONResponse(Response):
         content_type=None,
         direct_passthrough=False
     ):
-        pass
+        super(Response, self).__init__(
+            response=response,
+            status=status,
+            headers=headers,
+            mimetype=mimetype,
+            content_type=content_type,
+            direct_passthrough=direct_passthrough
+        )
 
     @classmethod
     def force_type(cls, rv, environ=None):
         if isinstance(rv, dict):
-            if 'meta' not in rv:
-                rv['meta'] = {'success': True}
             rv = jsonify(rv)
-        return super(JSONResponse, cls).force_type(rv, environ)
+        return super(Response, cls).force_type(rv, environ)

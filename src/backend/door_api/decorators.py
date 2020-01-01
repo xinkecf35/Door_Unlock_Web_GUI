@@ -1,10 +1,17 @@
-from Flask import Blueprint
-import json
-from werkzeug.exceptions import HTTPException
-
-bp = Blueprint(__name__)
+from marshmallow.exceptions import ValidationError
 
 
-@bp.errorhandler(HTTPException)
-def handle_exception(e):
+def handleException(e):
     return e.get_response()
+
+
+def handleBadRequest(err):
+    headers = err.data.get('headers', None)
+    messages = err.data.get('messages', ['Invalid request'])
+    errorResponseData = {
+        'meta': {
+            'success': True,
+            'message': messages
+        }
+    }
+    return errorResponseData, 400, headers

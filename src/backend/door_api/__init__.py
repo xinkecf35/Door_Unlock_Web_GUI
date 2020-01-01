@@ -6,6 +6,7 @@ from sqlalchemy import inspect
 
 from .database import Role
 from .extensions import db, ma
+from .JSONResponse import JSONResponse
 
 
 def _initializeDatabase(db):
@@ -33,8 +34,18 @@ def _registerBlueprints(app):
     app.register_blueprint(usersBP)
 
 
+def _registerErrorHandlers(app):
+    from .decorators import handleException, handleBadRequest
+    app.register_error_handler(422, handleBadRequest)
+    app.register_error_handler(400, handleBadRequest)
+    app.register_error_handler(500, handleException)
+
+
 def create_app(config):
-    app = Flask(__name__)
+    class APIFLask(Flask):
+        response_class = JSONResponse
+
+    app = APIFLask(__name__)
     if type(config) is dict:
         # Database/SQLAlchemy Setup
         currentDir = os.getcwd()
@@ -51,6 +62,7 @@ def create_app(config):
     db.app = app
     ma.app = app
     _registerBlueprints(app)
+    _registerErrorHandlers(app)
     _initializeDatabase(db)
     return app
 
