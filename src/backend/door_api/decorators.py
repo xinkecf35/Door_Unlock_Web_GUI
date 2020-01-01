@@ -1,8 +1,16 @@
 from marshmallow.exceptions import ValidationError
 
 
-def handleException(e):
-    return e.get_response()
+def handleException(err):
+    headers = err.data.get('headers', None)
+    messages = err.data.get('messages', ['Internal Error'])
+    errorResponseData = {
+        'meta': {
+            'success': False,
+            'message': messages
+        }
+    }
+    return errorResponseData, 500, headers
 
 
 def handleBadRequest(err):
@@ -10,7 +18,7 @@ def handleBadRequest(err):
     messages = err.data.get('messages', ['Invalid request'])
     errorResponseData = {
         'meta': {
-            'success': True,
+            'success': False,
             'message': messages
         }
     }
