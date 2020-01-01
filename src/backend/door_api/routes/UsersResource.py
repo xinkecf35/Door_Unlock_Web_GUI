@@ -21,7 +21,24 @@ class UsersResource(MethodView):
             db.session.rollback()
             abort(500)
         user = dumpSchema.dump(newUser)
-        return {'meta': {'success': True}, 'user': user}
+        return {'meta': {'success': True}, 'user': user}, 201
+
+    @use_args(UserSchema(many=True), locations=['json'])
+    def put(self, newUsers):
+        try:
+            for user in newUsers:
+                db.session.add(user)
+            db.session.commit()
+        except Exception:
+            db.session.rollback()
+            abort(500)
+        manySchemaDump = UserSchema(many=True, exclude=excludeFields)
+        dumpedUsers = manySchemaDump.dump(newUsers)
+        responseData = {
+            'meta': {'success': True, 'message': ['all users added']},
+            'users': dumpedUsers
+        }
+        return responseData, 201
 
 
 usersBP.add_url_rule(
