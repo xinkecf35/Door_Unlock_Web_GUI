@@ -50,3 +50,10 @@ class TestUsersResource:
         loadedData = json.loads(data.data)
         assert 'meta' in loadedData.keys()
         assert 'users' in loadedData.keys()
+
+    def testUserLogin(self, client):
+        successfulLogin = {
+            'username': 'test',
+            'password': 'password'
+        }
+        client.post('/user', json=successfulLogin)

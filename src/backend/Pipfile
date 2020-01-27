@@ -17,6 +17,8 @@ flask = "*"
 pyyaml = "*"
 webargs = "*"
 bcrypt = "*"
+cryptography = "*"
+python-jose = {extras = ["cryptography"],version = "*"}
 
 [requires]
 python_version = "3.7"

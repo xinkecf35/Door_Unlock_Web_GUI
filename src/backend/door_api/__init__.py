@@ -57,6 +57,7 @@ def create_app(config):
         app.config['ENV'] = config['PYTHON_ENV']
         app.config['SQLALCHEMY_DATABASE_URI'] = dbURI
         app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
+        app.config['SECRET_KEY'] = config['JWT_SECRET']
     db.init_app(app)
     ma.init_app(app)
     db.app = app

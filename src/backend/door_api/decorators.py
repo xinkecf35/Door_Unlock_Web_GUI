@@ -1,5 +1,3 @@
-from marshmallow.exceptions import ValidationError
-
 
 def handleException(err):
     headers = err.data.get('headers', None)
