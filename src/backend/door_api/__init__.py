@@ -30,8 +30,9 @@ def _initializeDatabase(db):
 
 
 def _registerBlueprints(app):
-    from .routes import usersBP
+    from .routes import userBP, usersBP
     app.register_blueprint(usersBP)
+    app.register_blueprint(userBP)
 
 
 def _registerErrorHandlers(app):

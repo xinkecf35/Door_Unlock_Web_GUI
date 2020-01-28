@@ -1,4 +1,5 @@
 import json
+from jose import jwt
 import pytest
 
 
@@ -51,9 +52,17 @@ class TestUsersResource:
         assert 'meta' in loadedData.keys()
         assert 'users' in loadedData.keys()
 
-    def testUserLogin(self, client):
+
+@pytest.mark.usefixtures('app', 'client')
+class TestUserResource:
+
+    def testUserLogin(self, app, client):
         successfulLogin = {
             'username': 'test',
             'password': 'password'
         }
-        client.post('/user', json=successfulLogin)
+        data = client.post('/user', json=successfulLogin)
+        data = json.loads(data.data)
+        token = data['token']
+        decodedToken = jwt.decode(token, app.config['SECRET_KEY'])
+        assert 'password' not in decodedToken.keys()
