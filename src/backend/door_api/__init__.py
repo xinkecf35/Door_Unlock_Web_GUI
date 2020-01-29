@@ -1,12 +1,21 @@
 import os
-import yaml
+import sys
+from base64 import encodebytes
 
+import yaml
 from flask import Flask
 from sqlalchemy import inspect
 
 from .database import Role
 from .extensions import db, ma
 from .JSONResponse import JSONResponse
+
+defaultConfig = {
+   'SQLITE_DB_NAME': 'door-db.sqlite',
+   'JWT_SECRET': encodebytes(os.urandom(32)),
+   'PYTHON_ENV': 'development'
+   ''
+}
 
 
 def _initializeDatabase(db):
@@ -42,7 +51,7 @@ def _registerErrorHandlers(app):
     app.register_error_handler(500, handleException)
 
 
-def create_app(config):
+def create_app(config=defaultConfig):
     class APIFLask(Flask):
         response_class = JSONResponse
 
@@ -57,8 +66,8 @@ def create_app(config):
             app.config['TESTING'] = True
         app.config['ENV'] = config['PYTHON_ENV']
         app.config['SQLALCHEMY_DATABASE_URI'] = dbURI
-        app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
         app.config['SECRET_KEY'] = config['JWT_SECRET']
+    app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
     db.init_app(app)
     ma.init_app(app)
     db.app = app
@@ -71,8 +80,12 @@ def create_app(config):
 
 if __name__ == '__main__':
     # load config from yaml file
-    with open('config.yaml', 'r') as configFile:
-        config = yaml.safe_load(configFile)
-    print(type(config))
+    try:
+        with open('config.yaml', 'r') as configFile:
+            config = yaml.safe_load(configFile)
+    except OSError:
+        print('Missing config file for flask app')
+        # exit with no such file
+        sys.exit(-2)
     app = create_app(config)
     app.run()

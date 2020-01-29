@@ -1,12 +1,12 @@
 from flask import Blueprint, current_app
 from flask.views import MethodView
+from jose import jwt
 from webargs import fields
 from webargs.flaskparser import use_args
 
-from door_api.extensions import db
 from door_api.database import Person
+from door_api.extensions import db
 from door_api.models.UserSchema import UserSchema
-from jose import jwt
 
 userBP = Blueprint('user', __name__, url_prefix='/user')
 excludeFields = ['password', 'admin']
