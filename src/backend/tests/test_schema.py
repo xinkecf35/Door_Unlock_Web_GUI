@@ -3,6 +3,7 @@ import pytest
 from door_api.database import Person, Role
 from marshmallow import ValidationError
 from door_api.models import UserSchema
+from door_api.models import JWTSchema
 
 
 @pytest.mark.usefixtures('db', 'ma')
@@ -124,3 +125,15 @@ class TestUserSchema:
         userSchema = UserSchema()
         with pytest.raises(ValidationError):
             userSchema.load(badActorData)
+
+
+@pytest.mark.usefixtures('db', 'ma')
+class TestJWTSchema:
+
+    def testJWTDump(self, db, ma):
+        testUsername = 'test'
+        test = Person.query.filter_by(username=testUsername).first()
+        jwtSchema = JWTSchema()
+        jwtDump = jwtSchema.dump(test)
+        assert len(jwtDump.keys()) == 4
+        assert 'password' not in jwtDump.keys()

@@ -6,11 +6,13 @@ from webargs.flaskparser import use_args
 
 from door_api.database import Person
 from door_api.extensions import db
+from door_api.models.JWTSchema import JWTSchema
 from door_api.models.UserSchema import UserSchema
 
 userBP = Blueprint('user', __name__, url_prefix='/user')
 excludeFields = ['password', 'admin']
 dumpSchema = UserSchema(exclude=excludeFields)
+jwtSchema = JWTSchema()
 
 loginSchema = {
     'username': fields.Str(required=True),
@@ -27,7 +29,7 @@ class UserResource(MethodView):
         user = Person.query.filter_by(username=username).first_or_404()
         if (user.validatePassword(password)):
             token = jwt.encode(
-                dumpSchema.dump(user),
+                jwtSchema.dump(user),
                 current_app.config['SECRET_KEY'],
                 algorithm='HS256')
             return {'meta': {'success': True}, 'token': token}

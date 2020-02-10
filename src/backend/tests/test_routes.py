@@ -66,3 +66,4 @@ class TestUserResource:
         token = data['token']
         decodedToken = jwt.decode(token, app.config['SECRET_KEY'])
         assert 'password' not in decodedToken.keys()
+        assert 'sub' in decodedToken.keys()
