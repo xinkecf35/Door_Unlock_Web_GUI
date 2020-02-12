@@ -6,13 +6,13 @@ from door_api.models import UserSchema
 from door_api.models import JWTSchema
 
 
-@pytest.mark.usefixtures('db', 'ma')
+@pytest.mark.usefixtures('db', 'ma', 'dummy_users')
 class TestUserSchema:
     def fetchRoles(self, db):
         roles = Role.query.all()
         return roles[0], roles[1]
 
-    def testUserSchemaDump(self, db, ma):
+    def testUserSchemaDump(self, db, ma, dummy_users):
         memberRole, adminRole = self.fetchRoles(db)
         referenceData = {
             'username': 'johnadmin',
@@ -36,13 +36,13 @@ class TestUserSchema:
             assert loadedDump[key] == referenceData[key]
         assert 'password' not in loadedDump.keys()
 
-    def testUserInsertFromData(self, db, ma):
+    def testUserInsertFromData(self, db, ma, dummy_users):
         insertFromData = {
             'username': 'test',
             'firstName': 'Johnny',
             'lastName': 'Test',
             'password': 'password',
-            'addedBy': 'johnadmin'
+            'addedBy': 'admin'
         }
         userSchema = UserSchema()
         userModelFromData = userSchema.load(insertFromData)
@@ -77,23 +77,23 @@ class TestUserSchema:
         with pytest.raises(ValidationError):
             userSchema.load(nonExistentUserData)
 
-    def testNestedAddedBy(self, db, ma):
+    def testNestedAddedBy(self, db, ma, dummy_users):
         nestedUserData = {
             'username': 'nestedAdd',
             'firstName': 'Zach',
             'lastName': 'Nested',
             'password': 'password',
-            'addedBy': 'test'
+            'addedBy': 'admin'
         }
         userSchema = UserSchema()
         nestedUser = userSchema.load(nestedUserData)
         db.session.add(nestedUser)
         db.session.commit()
         nestedDump = userSchema.dump(nestedUser)
-        assert nestedDump['addedBy'] == 'test'
+        assert nestedDump['addedBy'] == 'admin'
 
     def testUpdateFromLoad(self, db, ma):
-        testUsername = 'test'
+        testUsername = 'bobsmith'
         testId = Person.query.filter_by(username=testUsername).first().id
         updatedPassword = 'snakeoil'
         updateWithData = {
@@ -102,7 +102,7 @@ class TestUserSchema:
             'firstName': 'Johnny',
             'lastName': 'Test',
             'password': updatedPassword,
-            'addedBy': 'johnadmin'
+            'addedBy': 'admin'
         }
         userSchema = UserSchema()
         updatedUser = userSchema.load(updateWithData)
@@ -127,11 +127,11 @@ class TestUserSchema:
             userSchema.load(badActorData)
 
 
-@pytest.mark.usefixtures('db', 'ma')
+@pytest.mark.usefixtures('db', 'ma', 'dummy_users')
 class TestJWTSchema:
 
-    def testJWTDump(self, db, ma):
-        testUsername = 'test'
+    def testJWTDump(self, db, ma, dummy_users):
+        testUsername = 'bobsmith'
         test = Person.query.filter_by(username=testUsername).first()
         jwtSchema = JWTSchema()
         jwtDump = jwtSchema.dump(test)

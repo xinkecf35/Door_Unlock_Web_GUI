@@ -23,7 +23,7 @@ class TestPerson:
         testAdminPerson = Person(
             firstName='John',
             lastName='Smith',
-            username='admin',
+            username='admin1',
             password='snakeoil',
             roleId=role2.id)
         db.session.add(testAdminPerson)
@@ -32,7 +32,8 @@ class TestPerson:
         assert testAdminPerson.validatePassword('snakeoil')
         assert testAdminPerson.validatePassword('password') is False
 
-    def testPersonInsertWithAdmin(self, db):
+    @pytest.mark.usefixtures('dummy_users')
+    def testPersonInsertWithAdmin(self, db, dummy_users):
         persons = []
         names = []
         testAdminPerson = Person.query.filter_by(username='admin').first()
@@ -73,11 +74,12 @@ class TestPerson:
             db.session.commit()
         db.session.rollback()
 
-    def testRolesFetch(self, db):
+    @pytest.mark.usefixtures('dummy_users')
+    def testRolesFetch(self, db, dummy_users):
         personsCount = db.session.query(
             func.count(Person.id)).\
             join(Role).filter(Role.name == 'member').all()
-        assert personsCount[0][0] == 10
+        assert personsCount[0][0] == 2
         adminCount = db.session.query(
             func.count(Person.id)).\
             join(Role).filter(Role.name == 'admin').all()
