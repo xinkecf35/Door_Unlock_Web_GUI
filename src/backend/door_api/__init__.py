@@ -45,9 +45,13 @@ def _registerBlueprints(app):
 
 
 def _registerErrorHandlers(app):
-    from .decorators import handleException, handleBadRequest
-    app.register_error_handler(422, handleBadRequest)
+    from .decorators import handleException
+    from .decorators import handleBadRequest
+    from .decorators import handleForbiddenRequest
+
     app.register_error_handler(400, handleBadRequest)
+    app.register_error_handler(403, handleForbiddenRequest)
+    app.register_error_handler(422, handleBadRequest)
     app.register_error_handler(500, handleException)
 
 

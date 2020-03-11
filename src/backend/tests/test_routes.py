@@ -67,3 +67,11 @@ class TestUserResource:
         decodedToken = jwt.decode(token, app.config['SECRET_KEY'])
         assert 'password' not in decodedToken.keys()
         assert 'sub' in decodedToken.keys()
+
+    def testUserBadLogin(self, app, client, dummy_users):
+        badLogin = {
+            'username': 'alicesmith',
+            'password': 'phony'
+        }
+        data = client.post('/user', json=badLogin)
+        assert data.status_code == 403

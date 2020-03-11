@@ -1,4 +1,4 @@
-from flask import Blueprint, current_app
+from flask import Blueprint, abort, current_app
 from flask.views import MethodView
 from jose import jwt
 from webargs import fields
@@ -33,6 +33,8 @@ class UserResource(MethodView):
                 current_app.config['SECRET_KEY'],
                 algorithm='HS256')
             return {'meta': {'success': True}, 'token': token}
+        else:
+            abort(403, 'incorrect password')
 
 
 userBP.add_url_rule('', 'UserResource', view_func=UserResource.as_view('user'))
