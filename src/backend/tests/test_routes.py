@@ -61,12 +61,14 @@ class TestUserResource:
             'username': 'alicesmith',
             'password': 'password'
         }
-        data = client.post('/user', json=successfulLogin)
-        data = json.loads(data.data)
+        response = client.post('/user', json=successfulLogin)
+        data = json.loads(response.data)
         token = data['token']
+        headers = response.headers
         decodedToken = jwt.decode(token, app.config['SECRET_KEY'])
         assert 'password' not in decodedToken.keys()
         assert 'sub' in decodedToken.keys()
+        assert headers['X-Auth-Token'] == token
 
     def testUserBadLogin(self, app, client, dummy_users):
         badLogin = {
