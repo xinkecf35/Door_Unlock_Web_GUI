@@ -19,13 +19,11 @@ class TestUserSchema:
             'firstName': 'John',
             'lastName': 'Smity'
         }
-        testAdminPerson = Person(
-            firstName='John',
-            lastName='Smity',
-            username='johnadmin',
-            password='password',
-            roleId=adminRole.id
-        )
+        testAdminPerson = Person(firstName='John',
+                                 lastName='Smity',
+                                 username='johnadmin',
+                                 password='password',
+                                 roleId=adminRole.id)
         excludedFields = ['password', 'admin', 'created']
         userSchema = UserSchema(exclude=excludedFields)
         db.session.add(testAdminPerson)
@@ -129,7 +127,6 @@ class TestUserSchema:
 
 @pytest.mark.usefixtures('db', 'ma', 'dummy_users')
 class TestJWTSchema:
-
     def testJWTDump(self, db, ma, dummy_users):
         testUsername = 'bobsmith'
         test = Person.query.filter_by(username=testUsername).first()

@@ -11,7 +11,6 @@ dumpSchema = UserSchema(exclude=excludeFields)
 
 
 class UsersResource(MethodView):
-
     @use_args(UserSchema(), location='json')
     def post(self, newUser):
         try:
@@ -35,14 +34,15 @@ class UsersResource(MethodView):
         manySchemaDump = UserSchema(many=True, exclude=excludeFields)
         dumpedUsers = manySchemaDump.dump(newUsers)
         responseData = {
-            'meta': {'success': True, 'message': ['all users added']},
+            'meta': {
+                'success': True,
+                'message': ['all users added']
+            },
             'users': dumpedUsers
         }
         return responseData, 201
 
 
-usersBP.add_url_rule(
-    '',
-    'UsersResource',
-    view_func=UsersResource.as_view('users')
-)
+usersBP.add_url_rule('',
+                     'UsersResource',
+                     view_func=UsersResource.as_view('users'))

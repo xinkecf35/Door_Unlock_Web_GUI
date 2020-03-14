@@ -19,22 +19,18 @@ loginSchema = {
 }
 # simple schema for handling code sent to url, probably will switch
 # to custom header
-codeSchema = {
-    'token': fields.Str(required=True)
-}
+codeSchema = {'token': fields.Str(required=True)}
 
 
 class UserResource(MethodView):
-
     def _authenticatePassword(self, args):
         username = args['username']
         password = args['password']
         user = Person.query.filter_by(username=username).first_or_404()
         if (user.validatePassword(password)):
-            token = jwt.encode(
-                jwtSchema.dump(user),
-                current_app.config['SECRET_KEY'],
-                algorithm='HS256')
+            token = jwt.encode(jwtSchema.dump(user),
+                               current_app.config['SECRET_KEY'],
+                               algorithm='HS256')
             return True, token
         else:
             return False, None
@@ -42,8 +38,7 @@ class UserResource(MethodView):
     def _authenticateJWT(self, username, args):
         token = args['token']
         try:
-            decodedToken = jwt.decode(token,
-                                      current_app.config['SECRET_KEY'])
+            decodedToken = jwt.decode(token, current_app.config['SECRET_KEY'])
             if decodedToken['username'] != username:
                 return False, None
         except JWTError as err:
@@ -70,8 +65,8 @@ class UserResource(MethodView):
                     'meta': {
                         'success': True,
                         'message': 'valid token'
-                        }
                     }
+                }
                 return responseBody
             else:
                 abort(403, getattr(data, 'description', 'invalid token'))
@@ -82,6 +77,4 @@ userBP.add_url_rule('',
                     'UserResource',
                     defaults={'username': None},
                     view_func=userView)
-userBP.add_url_rule('/<username>/code',
-                    'UserResource',
-                    view_func=userView)
+userBP.add_url_rule('/<username>/code', 'UserResource', view_func=userView)

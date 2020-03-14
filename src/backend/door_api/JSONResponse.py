@@ -6,23 +6,19 @@ class JSONResponse(Response):
     default_status = 200
     charset = 'utf-8'
 
-    def __init__(
-        self,
-        response=None,
-        status=None,
-        headers=None,
-        mimetype=None,
-        content_type=None,
-        direct_passthrough=False
-    ):
-        super(Response, self).__init__(
-            response=response,
-            status=status,
-            headers=headers,
-            mimetype=mimetype,
-            content_type=content_type,
-            direct_passthrough=direct_passthrough
-        )
+    def __init__(self,
+                 response=None,
+                 status=None,
+                 headers=None,
+                 mimetype=None,
+                 content_type=None,
+                 direct_passthrough=False):
+        super(Response, self).__init__(response=response,
+                                       status=status,
+                                       headers=headers,
+                                       mimetype=mimetype,
+                                       content_type=content_type,
+                                       direct_passthrough=direct_passthrough)
 
     @classmethod
     def force_type(cls, rv, environ=None):

@@ -11,10 +11,10 @@ from .extensions import db, ma
 from .JSONResponse import JSONResponse
 
 defaultConfig = {
-   'SQLITE_DB_NAME': 'door-db.sqlite',
-   'JWT_SECRET': encodebytes(os.urandom(32)),
-   'PYTHON_ENV': 'development'
-   ''
+    'SQLITE_DB_NAME': 'door-db.sqlite',
+    'JWT_SECRET': encodebytes(os.urandom(32)),
+    'PYTHON_ENV': 'development'
+    ''
 }
 
 
@@ -23,16 +23,11 @@ def _initializeDatabase(db):
     isEmpty = tableNames == []
     if isEmpty:
         db.create_all()
-        role1 = Role(
-            name='member',
-            canUnlock=1,
-            canManage=0,
-            canAccessHistory=0)
-        role2 = Role(
-            name='admin',
-            canUnlock=1,
-            canManage=1,
-            canAccessHistory=1)
+        role1 = Role(name='member',
+                     canUnlock=1,
+                     canManage=0,
+                     canAccessHistory=0)
+        role2 = Role(name='admin', canUnlock=1, canManage=1, canAccessHistory=1)
         db.session.add(role1)
         db.session.add(role2)
         db.session.commit()

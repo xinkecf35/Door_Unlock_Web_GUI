@@ -20,12 +20,11 @@ class TestPerson:
 
     def testInsertPersonAdmin(self, db):
         role1, role2 = self.fetchRoles(db)
-        testAdminPerson = Person(
-            firstName='John',
-            lastName='Smith',
-            username='admin1',
-            password='snakeoil',
-            roleId=role2.id)
+        testAdminPerson = Person(firstName='John',
+                                 lastName='Smith',
+                                 username='admin1',
+                                 password='snakeoil',
+                                 roleId=role2.id)
         db.session.add(testAdminPerson)
         db.session.commit()
         assert testAdminPerson.password != 'snakeoil'
@@ -40,12 +39,11 @@ class TestPerson:
         for _ in range(10):
             data = self.generateName()
             names.append(data)
-            person = Person(
-                firstName=data[0],
-                lastName=data[1],
-                username=data[2],
-                password='password',
-                addedBy=testAdminPerson.id)
+            person = Person(firstName=data[0],
+                            lastName=data[1],
+                            username=data[2],
+                            password='password',
+                            addedBy=testAdminPerson.id)
             persons.append(person)
         for person in persons:
             db.session.add(person)
@@ -62,13 +60,11 @@ class TestPerson:
 
         # Attempt to create user that does not have foreign key available,
         # should fail to do so.
-        fkTestPerson = Person(
-            firstName='Alice',
-            lastName='Invalid',
-            username='invalidalice',
-            password='password',
-            roleId=3
-        )
+        fkTestPerson = Person(firstName='Alice',
+                              lastName='Invalid',
+                              username='invalidalice',
+                              password='password',
+                              roleId=3)
         with pytest.raises(IntegrityError):
             db.session.add(fkTestPerson)
             db.session.commit()

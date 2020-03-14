@@ -2,7 +2,6 @@ from flask_marshmallow import Marshmallow
 from flask_sqlalchemy import SQLAlchemy, event
 from sqlalchemy.engine import Engine
 
-
 db = SQLAlchemy()
 ma = Marshmallow()
 

@@ -35,8 +35,7 @@ class UserSchema(ma.ModelSchema):
         sqla_session = db.session
 
     addedBy = AddedByField()
-    role = ma.Nested(
-        RoleSchema,
-        only=['id', 'name'],
-        partial=True,
-        validate=_checkRoleExistence)
+    role = ma.Nested(RoleSchema,
+                     only=['id', 'name'],
+                     partial=True,
+                     validate=_checkRoleExistence)

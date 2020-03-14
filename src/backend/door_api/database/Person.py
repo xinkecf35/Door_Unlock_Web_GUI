@@ -17,16 +17,13 @@ class Person(db.Model):
     lastName = db.Column('last_name', db.String(50), nullable=False)
     username = db.Column(db.String(20), unique=True, nullable=False)
     created = db.Column(db.DateTime(), default=datetime.utcnow())
-    addedBy = db.Column(
-        'added_by',
-        db.Integer,
-        db.ForeignKey('person.person_id'))
+    addedBy = db.Column('added_by', db.Integer,
+                        db.ForeignKey('person.person_id'))
     password = db.Column(db.LargeBinary(60), nullable=False)
-    roleId = db.Column(
-        'role',
-        db.Integer,
-        db.ForeignKey("role.role_id"),
-        default='1')
+    roleId = db.Column('role',
+                       db.Integer,
+                       db.ForeignKey("role.role_id"),
+                       default='1')
     role = db.relationship('Role')
     admin = db.relationship('Person')
 

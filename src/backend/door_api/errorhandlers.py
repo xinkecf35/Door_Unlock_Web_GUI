@@ -1,4 +1,3 @@
-
 def handleException(err):
     response = getattr(err, "response", None)
     if response:

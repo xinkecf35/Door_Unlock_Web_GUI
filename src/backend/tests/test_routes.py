@@ -5,9 +5,8 @@ import pytest
 
 @pytest.mark.usefixtures('app', 'client', 'dummy_users')
 class TestUsersResource:
-
     def testUsersPost(self, client, dummy_users):
-        data = client.post('/users', json={
+        mockRequestBody = {
             'username': 'test',
             'firstName': 'Johnny',
             'lastName': 'Test',
@@ -16,36 +15,32 @@ class TestUsersResource:
                 'id': 2,
                 'name': 'admin'
             }
-        })
+        }
+        data = client.post('/users', json=mockRequestBody)
         assert data.status_code == 201
         assert data.is_json is True
         loadedData = json.loads(data.data)
         assert 'meta' in loadedData.keys()
-        data = client.post('/users', json={
-            'username': 'badActor'
-        })
+        data = client.post('/users', json={'username': 'badActor'})
         assert data.status_code == 400
         assert data.is_json is True
         loadedData = json.loads(data.data)
         assert 'meta' in loadedData.keys()
 
     def testUsersPut(self, client, dummy_users):
-        testUsers = [
-            {
-                'username': 'list1',
-                'firstName': 'Alice',
-                'lastName': 'Test',
-                'password': 'password',
-                'addedBy': 'admin'
-            },
-            {
-                'username': 'list2',
-                'firstName': 'Bob',
-                'lastName': 'Test',
-                'password': 'password',
-                'addedBy': 'admin'
-            }
-        ]
+        testUsers = [{
+            'username': 'list1',
+            'firstName': 'Alice',
+            'lastName': 'Test',
+            'password': 'password',
+            'addedBy': 'admin'
+        }, {
+            'username': 'list2',
+            'firstName': 'Bob',
+            'lastName': 'Test',
+            'password': 'password',
+            'addedBy': 'admin'
+        }]
         data = client.put('/users', json=testUsers)
         assert data.status_code == 201
         loadedData = json.loads(data.data)
@@ -55,12 +50,8 @@ class TestUsersResource:
 
 @pytest.mark.usefixtures('app', 'client', 'dummy_users')
 class TestUserResource:
-
     def testUserLogin(self, app, client, dummy_users):
-        successfulLogin = {
-            'username': 'alicesmith',
-            'password': 'password'
-        }
+        successfulLogin = {'username': 'alicesmith', 'password': 'password'}
         response = client.post('/user', json=successfulLogin)
         data = json.loads(response.data)
         token = data['token']
@@ -71,9 +62,6 @@ class TestUserResource:
         assert headers['X-Auth-Token'] == token
 
     def testUserBadLogin(self, app, client, dummy_users):
-        badLogin = {
-            'username': 'alicesmith',
-            'password': 'phony'
-        }
+        badLogin = {'username': 'alicesmith', 'password': 'phony'}
         data = client.post('/user', json=badLogin)
         assert data.status_code == 403

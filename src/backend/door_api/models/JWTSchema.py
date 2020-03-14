@@ -12,13 +12,5 @@ class JWTSchema(ma.ModelSchema):
 
     class Meta:
         model = Person
-        exclude = [
-            'username',
-            'id',
-
-            'created',
-            'addedBy',
-            'admin',
-            'password'
-        ]
+        exclude = ['username', 'id', 'created', 'addedBy', 'admin', 'password']
         sqla_session = db.session

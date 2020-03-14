@@ -14,5 +14,9 @@
     "python.testing.nosetestsEnabled": false,
     "python.testing.pytestEnabled": true,
     "python.linting.flake8Enabled": true,
-    "python.formatting.provider": "yapf"
+    "python.formatting.provider": "yapf",
+    "python.linting.flake8Args": [
+        "--max-line-length=80"
+    ],
+    "editor.formatOnSave": true
 }
