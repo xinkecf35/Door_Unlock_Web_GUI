@@ -12,7 +12,7 @@ dumpSchema = UserSchema(exclude=excludeFields)
 
 class UsersResource(MethodView):
 
-    @use_args(UserSchema(), locations=['json'])
+    @use_args(UserSchema(), location='json')
     def post(self, newUser):
         try:
             db.session.add(newUser)
@@ -23,7 +23,7 @@ class UsersResource(MethodView):
         user = dumpSchema.dump(newUser)
         return {'meta': {'success': True}, 'user': user}, 201
 
-    @use_args(UserSchema(many=True), locations=['json'])
+    @use_args(UserSchema(many=True), location='json')
     def put(self, newUsers):
         try:
             for user in newUsers:
