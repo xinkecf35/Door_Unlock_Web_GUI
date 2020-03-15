@@ -53,7 +53,7 @@ class UserResource(MethodView):
             if success is True:
                 responseBody = {'meta': {'success': True}, 'token': token}
                 response = make_response(responseBody)
-                response.headers['X-Auth-Token'] = token
+                response.headers['Authorization'] = 'Bearer ' + token
                 return response
             else:
                 abort(403, 'incorrect password')

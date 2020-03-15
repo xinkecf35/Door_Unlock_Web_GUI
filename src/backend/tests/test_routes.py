@@ -59,7 +59,7 @@ class TestUserResource:
         decodedToken = jwt.decode(token, app.config['SECRET_KEY'])
         assert 'password' not in decodedToken.keys()
         assert 'sub' in decodedToken.keys()
-        assert headers['X-Auth-Token'] == token
+        assert headers['Authorization'] == 'Bearer ' + token
 
     def testUserBadLogin(self, app, client, dummy_users):
         badLogin = {'username': 'alicesmith', 'password': 'phony'}
