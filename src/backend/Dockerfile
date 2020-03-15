@@ -1,8 +1,9 @@
 # Builder/Base State
 FROM python:3.7-alpine AS builder
 LABEL Name="door-unlock-api" Version=0.1.0
-RUN apk update && apk add sqlite
-RUN pip3 install pipenv
+RUN apk update && \
+    apk add sqlite libffi-dev gcc jpeg-dev zlib-dev\
+    python3-dev musl-dev openssl-dev 
 WORKDIR /app
 COPY . /app
 RUN pip install -r requirements.txt
@@ -16,4 +17,4 @@ CMD pytest
 FROM builder AS production
 RUN rm -rf Pipfile* requirements*.txt tests
 VOLUME [ "/app/data" ]
-CMD python3 door_api/app.py
+CMD python3 /app/app.py

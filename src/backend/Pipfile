@@ -20,6 +20,7 @@ webargs = "*"
 bcrypt = "*"
 cryptography = "*"
 python-jose = {extras = ["cryptography"],version = "*"}
+qrcode = {extras = ["pil"],version = "*"}
 
 [requires]
 python_version = "3.7"
