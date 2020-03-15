@@ -7,7 +7,11 @@ from flask import Flask
 from sqlalchemy import inspect
 
 from .database import Role
+from .errorhandlers import handleException
+from .errorhandlers import handleBadRequest
+from .errorhandlers import handleForbiddenRequest
 from .extensions import db, ma
+from .routes import userBP, usersBP
 from .JSONResponse import JSONResponse
 
 defaultConfig = {
@@ -34,16 +38,11 @@ def _initializeDatabase(db):
 
 
 def _registerBlueprints(app):
-    from .routes import userBP, usersBP
     app.register_blueprint(usersBP)
     app.register_blueprint(userBP)
 
 
 def _registerErrorHandlers(app):
-    from .decorators import handleException
-    from .decorators import handleBadRequest
-    from .decorators import handleForbiddenRequest
-
     app.register_error_handler(400, handleBadRequest)
     app.register_error_handler(403, handleForbiddenRequest)
     app.register_error_handler(422, handleBadRequest)
