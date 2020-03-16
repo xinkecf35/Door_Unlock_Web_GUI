@@ -1,3 +1,4 @@
+import base64
 import json
 from jose import jwt
 import pytest
@@ -65,3 +66,36 @@ class TestUserResource:
         badLogin = {'username': 'alicesmith', 'password': 'phony'}
         data = client.post('/user', json=badLogin)
         assert data.status_code == 403
+
+    def testJWTValidateValidHeader(self, app, client, dummy_users):
+        tokenData = {
+            'firstName': 'Alice',
+            'lastName': 'Smith',
+            'role': {
+                'id': 1,
+                'name': 'member'
+            },
+            'sub': 'alicesmith'
+        }
+        validJWT = jwt.encode(tokenData, app.config['SECRET_KEY'])
+        bearerToken = 'Bearer ' + validJWT
+        # Apparently, this is nessary for the spec, will look into writing middleware for this
+        # encodedToken = base64.b64encode(bytes(bearerToken, 'utf-16'))
+        headers = {'Authorization': bearerToken}
+        response = client.get('/user/alicesmith/code', headers=headers)
+        assert response.status_code == 200
+
+    def testJWTValidateValidBody(self, app, client, dummy_users):
+        tokenData = {
+            'firstName': 'Alice',
+            'lastName': 'Smith',
+            'role': {
+                'id': 1,
+                'name': 'member'
+            },
+            'sub': 'alicesmith'
+        }
+        validJWT = jwt.encode(tokenData, app.config['SECRET_KEY'])
+        body = json.dumps({'token': validJWT})
+        response = client.get('/user/alicesmith/code', json=body)
+        assert response.status_code == 200
