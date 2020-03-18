@@ -79,6 +79,12 @@ tests are being created gradually. The test suite is not meant to be
 comprehensive, just enough to verify very basic operations. The following is a
 outline of the endpoints and methods available:
 
+*Authentication Credentials*: Where specified, this expected to be a JSON Web Token (JWT)
+and is expected to be either presented to the server in one of two ways:
+- In a properly formed JSON body where the the jwt is set to the token key: ```{... token: {jwt}, ... }```
+- In the Authorization Header(preferred): The Authorization Header is set for the request as a Bearer Token: 
+```Authorization: Bearer {jwt}```
+
 #### /users ####
 
 * POST
@@ -107,6 +113,13 @@ outline of the endpoints and methods available:
 * POST
     - logs/authenticates the user for web portal
     - returns a cookie with a JWT to act as authentication credentials
+    - expects information in request body
+
+#### /user/{username}code ####
+
+* GET
+    - gets an QR code (i.e. Image) from the endpoint
+    - this is a protected route, requires valid JWT in either header or body
 
 #### /users/{username}/profile ####
 *Note this is a protected route, JWT subject and username must match*
@@ -123,5 +136,4 @@ outline of the endpoints and methods available:
   out authentication and hand off)
 * Restricted interactions here may leverage channel membership as authentication
   mechanism.
-
 

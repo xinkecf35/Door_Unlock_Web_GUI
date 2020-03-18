@@ -3,7 +3,7 @@ from io import BytesIO
 from flask import (Blueprint, abort, current_app, make_response, send_file,
                    request)
 from flask.views import MethodView
-from jose import JWTError, jwt
+from jose import jwt
 from webargs import fields
 from webargs.flaskparser import parser, use_args
 
@@ -24,6 +24,8 @@ loginSchema = {
 
 
 class UserResource(MethodView):
+    # TODO: Add ability to update profile
+
     def _authenticatePassword(self, args):
         username = args['username']
         password = args['password']
@@ -36,6 +38,8 @@ class UserResource(MethodView):
         else:
             return False, None
 
+    # Authenticates the user with username and password
+    # refer to above login schema for expected format
     @use_args(loginSchema)
     def post(self, args):
         # Password authentication

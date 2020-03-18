@@ -11,6 +11,8 @@ dumpSchema = UserSchema(exclude=excludeFields)
 
 
 class UsersResource(MethodView):
+    # TODO: Make authnentication required here
+    # Creates a User
     @use_args(UserSchema(), location='json')
     def post(self, newUser):
         try:
@@ -22,6 +24,7 @@ class UsersResource(MethodView):
         user = dumpSchema.dump(newUser)
         return {'meta': {'success': True}, 'user': user}, 201
 
+    # Creates multiple users
     @use_args(UserSchema(many=True), location='json')
     def put(self, newUsers):
         try:
