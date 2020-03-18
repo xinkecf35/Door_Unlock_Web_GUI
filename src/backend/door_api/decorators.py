@@ -24,6 +24,7 @@ def tokenRequired(f):
                 decode(token,
                        current_app.config['SECRET_KEY'],
                        subject=username)
+            kwargs['token'] = token
             return f(*args, **kwargs)
         except JWTError as err:
             abort(403, "invalid token: " + err.description)

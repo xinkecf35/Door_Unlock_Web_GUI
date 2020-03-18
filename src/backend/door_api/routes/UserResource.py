@@ -1,5 +1,7 @@
 import qrcode
-from flask import Blueprint, abort, current_app, make_response, request
+from io import BytesIO
+from flask import (Blueprint, abort, current_app, make_response, send_file,
+                   request)
 from flask.views import MethodView
 from jose import JWTError, jwt
 from webargs import fields
@@ -49,9 +51,16 @@ class UserResource(MethodView):
         else:
             abort(403, 'incorrect password')
 
+    # Returns a token encoded in QR code, modified to work with BytesIO,
+    # works in memory
+    # https://stackoverflow.com/questions/7877282/how-to-send-image-generated-by-pil-to-browser
     @tokenRequired
-    def get(self, username):
-        return {'meta': {'success': True}}
+    def get(self, token, username):
+        imageIO = BytesIO()
+        encodedTokenImage = qrcode.make(token)
+        encodedTokenImage.save(imageIO, 'PNG')
+        imageIO.seek(0)
+        return send_file(imageIO, mimetype='image/png')
 
 
 userView = UserResource.as_view('user')

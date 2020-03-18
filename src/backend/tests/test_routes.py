@@ -1,7 +1,10 @@
 import base64
 import json
+from io import BytesIO
+from PIL import Image as img
 from jose import jwt
 import pytest
+from pathlib import Path
 
 
 @pytest.mark.usefixtures('app', 'client', 'dummy_users')
@@ -79,11 +82,13 @@ class TestUserResource:
         }
         validJWT = jwt.encode(tokenData, app.config['SECRET_KEY'])
         bearerToken = 'Bearer ' + validJWT
-        # Apparently, this is nessary for the spec, will look into writing middleware for this
-        # encodedToken = base64.b64encode(bytes(bearerToken, 'utf-16'))
         headers = {'Authorization': bearerToken}
         response = client.get('/user/alicesmith/code', headers=headers)
+        responseImage = img.open(BytesIO(response.data))
+        testImagePath = Path('./tests/test_qr_code.png')
+        referenceImage = img.open(testImagePath)
         assert response.status_code == 200
+        assert referenceImage == responseImage
 
     def testJWTValidateValidBody(self, app, client, dummy_users):
         tokenData = {
@@ -98,4 +103,8 @@ class TestUserResource:
         validJWT = jwt.encode(tokenData, app.config['SECRET_KEY'])
         body = json.dumps({'token': validJWT})
         response = client.get('/user/alicesmith/code', json=body)
+        responseImage = img.open(BytesIO(response.data))
+        testImagePath = Path('./tests/test_qr_code.png')
+        referenceImage = img.open(testImagePath)
         assert response.status_code == 200
+        assert referenceImage == responseImage
