@@ -29,10 +29,12 @@ class AddedByField(fields.Field):
         return addedByPerson.id
 
 
-class UserSchema(ma.ModelSchema):
+class UserSchema(ma.SQLAlchemyAutoSchema):
     class Meta:
         model = Person
         sqla_session = db.session
+        load_instance = True
+        include_relationships = True
 
     addedBy = AddedByField()
     role = ma.Nested(RoleSchema,

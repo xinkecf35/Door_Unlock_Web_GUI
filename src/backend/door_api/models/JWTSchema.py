@@ -6,7 +6,7 @@ from door_api.extensions import db, ma
 from .RoleSchema import RoleSchema
 
 
-class JWTSchema(ma.ModelSchema):
+class JWTSchema(ma.SQLAlchemyAutoSchema):
     sub = fields.String(attribute='username')
     role = ma.Nested(RoleSchema, only=['id', 'name'], partial=True)
 
@@ -14,3 +14,4 @@ class JWTSchema(ma.ModelSchema):
         model = Person
         exclude = ['username', 'id', 'created', 'addedBy', 'admin', 'password']
         sqla_session = db.session
+        load_instance = True
